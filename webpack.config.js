@@ -12,4 +12,7 @@ module.exports = {
       overlay: false
     }
   },
+  optimization: {
+    minimize: false
+  }
 }
