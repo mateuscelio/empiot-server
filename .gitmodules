@@ -1,0 +1,3 @@
+[submodule "empiot"]
+	path = empiot
+	url = git@github.com:mateuscelio/empiot.git
