@@ -5,6 +5,7 @@ const { createServer } = require('http');
 const fs = require('fs/promises');
 const path = require('path');
 
+const UNIX_SOCKET_PATH = '/tmp/sock-test'
 
 const httpServer = createServer(async (req, res) => {
   switch (req.url) {
@@ -52,7 +53,7 @@ io.on('connection', (socket) => {
 });
 
 (async () => {
-  await startSocketServer(io)
-  await startEmpiotProc()
+  await startSocketServer(io, UNIX_SOCKET_PATH)
+  await startEmpiotProc(UNIX_SOCKET_PATH)
   httpServer.listen(3000)
 })();

@@ -1,10 +1,8 @@
 const net = require('net');
 const fs = require('fs/promises');
 
-const SOCK_PATH = '/tmp/sock-test'
-
-exports.startSocketServer = async (wsServer) => {
-  await cleanPreviousSocket()
+exports.startSocketServer = async (wsServer, unixSocketPath) => {
+  await cleanPreviousSocket(unixSocketPath)
 
   const unixServer = net.createServer((client) => {
     console.log('connection created!')
@@ -19,11 +17,11 @@ exports.startSocketServer = async (wsServer) => {
     })
   })
 
-  unixServer.listen(SOCK_PATH).on('connection', (s) => {
+  unixServer.listen(unixSocketPath).on('connection', (s) => {
     console.log('Client connected')
   });
 
-  console.log(`Socket server created on "${SOCK_PATH}"`)
+  console.log(`Socket server created on "${unixSocketPath}"`)
 
 }
 
@@ -43,9 +41,9 @@ function parseReadData(readBatch) {
   })
 }
 
-async function cleanPreviousSocket() {
+async function cleanPreviousSocket(unixSocketPath) {
   try {
-    await fs.unlink(SOCK_PATH);
+    await fs.unlink(unixSocketPath);
     console.log('Removed previous socket file...');
   } catch (error) {
     console.log('No previous socket file found.')

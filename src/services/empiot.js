@@ -3,14 +3,14 @@ const { showStd } = require('../utils');
 const dgram = require('node:dgram');
 
 const EMPIOT_MEASUREMENT_CONTROL_PORT = 5000;
-const EMPIOT_BIN = '/home/pi/empiot/source/empiot';
+const EMPIOT_BIN = __dirname + '/../../empiot/dist/empiot';
 
 let empiotProc = null;
 const udpSocket = dgram.createSocket('udp4');
 
-exports.startEmpiotProc = () => {
+exports.startEmpiotProc = (unixSocketPath) => {
   if (!empiotProc) {
-    empiotProc = spawn(EMPIOT_BIN, ['/tmp/readings', '-g'])
+    empiotProc = spawn(EMPIOT_BIN, ['-s', unixSocketPath, '-g'])
 
     empiotProc.on('exit', function (code, signal) {
       console.log('Empiot process exited with ' +
