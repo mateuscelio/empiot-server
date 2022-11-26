@@ -1,4 +1,4 @@
-const { startEmpiotProc, startMeasurement, stopMeasurement } = require('./services/empiot');
+const { startEmpiotProc, startMeasurement, stopMeasurement, stopEmpiotProc } = require('./services/empiot');
 const { startSocketServer } = require('./services/unix-socket-server');
 const { Server } = require('socket.io')
 const { createServer } = require('http');
@@ -43,12 +43,17 @@ io.on('connection', (socket) => {
   console.log('WS client connected!');
   socket.emit('hello', 'world');
 
-  socket.on('empiotCommand', (msg) => {
+  socket.on('empiotCommand', async (msg) => {
     if (msg === 'start')
       return startMeasurement();
 
     if (msg === 'stop')
       return stopMeasurement();
+
+    if (msg === 'restartEmpiotProccess') {
+      stopEmpiotProc();
+      await startEmpiotProc(UNIX_SOCKET_PATH);
+    }
   })
 });
 

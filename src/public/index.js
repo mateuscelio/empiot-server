@@ -5,6 +5,7 @@ const socket = io();
 
 const startBtn = document.getElementById('start-btn')
 const stopBtn = document.getElementById('stop-btn')
+const restartBtn = document.getElementById('restart-btn')
 const resetChartZoomBtn = document.getElementById('reset-zoom')
 const chartCanvasCtx = document.getElementById('chart')
 const exportDataBtn = document.getElementById('export-data-btn')
@@ -13,6 +14,7 @@ const app = new App(chartCanvasCtx);
 
 startBtn.addEventListener('click', () => startMeasurement())
 stopBtn.addEventListener('click', () => stopMeasurement())
+restartBtn.addEventListener('click', () => restartEmpiotProccess())
 resetChartZoomBtn.addEventListener('click', () => resetChartZoom())
 exportDataBtn.addEventListener('click', () => exportData())
 
@@ -27,6 +29,10 @@ function startMeasurement() {
 
 function stopMeasurement() {
   socket.emit('empiotCommand', 'stop');
+}
+
+function restartEmpiotProccess() {
+  socket.emit('empiotCommand', 'restartEmpiotProccess')
 }
 
 function resetChartZoom() {

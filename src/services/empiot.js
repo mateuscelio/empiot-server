@@ -15,7 +15,7 @@ exports.startEmpiotProc = (unixSocketPath) => {
     empiotProc.on('exit', function (code, signal) {
       console.log('Empiot process exited with ' +
         `code ${code} and signal ${signal}`);
-      empiotProc = null
+      //      process.exit(1)
     });
     empiotProc.stdout.on('data', (data) => showStd('Empiot Proc Stdout', data))
     empiotProc.stderr.on('data', (data) => showStd('Empiot Proc Stdout', data))
@@ -32,8 +32,10 @@ exports.startEmpiotProc = (unixSocketPath) => {
 }
 
 exports.stopEmpiotProc = () => {
-  if (empiotProc)
-    empiotProc.stdin.write('q\n´');
+  if (empiotProc) {
+    empiotProc.kill('SIGKILL')
+    empiotProc = null;
+  }
 }
 
 exports.startMeasurement = () => {
