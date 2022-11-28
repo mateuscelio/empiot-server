@@ -1,0 +1,4 @@
+#!/bin/node
+const startServer = require('../src/server');
+
+startServer();

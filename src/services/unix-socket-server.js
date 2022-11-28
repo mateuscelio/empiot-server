@@ -12,7 +12,6 @@ exports.startSocketServer = async (wsServer, unixSocketPath) => {
 
     client.on('data', (buff) => {
       const msg = buff.toString();
-      console.log(`[Client data]: ${msg}`)
       wsServer.emit('measurementData', parseReadData(msg));
     })
   })

@@ -57,8 +57,10 @@ io.on('connection', (socket) => {
   })
 });
 
-(async () => {
+const startServer = async () => {
   await startSocketServer(io, UNIX_SOCKET_PATH)
   await startEmpiotProc(UNIX_SOCKET_PATH)
   httpServer.listen(3000)
-})();
+}
+
+module.exports = startServer

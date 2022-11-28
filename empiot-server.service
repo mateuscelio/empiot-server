@@ -1,0 +1,12 @@
+[Unit]
+Description=empiot server
+After=network.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/home/pi/tcc/empiot-server/bin/startServer
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

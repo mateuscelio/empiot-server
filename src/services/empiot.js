@@ -1,9 +1,10 @@
 const { spawn } = require('child_process');
 const { showStd } = require('../utils');
 const dgram = require('node:dgram');
+const path = require('path');
 
 const EMPIOT_MEASUREMENT_CONTROL_PORT = 5000;
-const EMPIOT_BIN = __dirname + '/../../empiot/dist/empiot';
+const EMPIOT_BIN = path.join(__dirname, '/../../empiot/dist/empiot');
 
 let empiotProc = null;
 const udpSocket = dgram.createSocket('udp4');
