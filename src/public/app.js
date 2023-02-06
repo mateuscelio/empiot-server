@@ -20,9 +20,9 @@ export class App {
       return {
         id: d.id,
         t: this._roundFloat((d.t - this._startTime), 4),
-        current: this._roundFloat(d.current, 2),
-        busVoltage: this._roundFloat(d.bus_v, 2),
-        power: this._roundFloat(d.bus_v * d.current, 2)
+        current: this._roundFloat(d.current, 3),
+        busVoltage: this._roundFloat(d.bus_v, 3),
+        power: this._roundFloat(d.bus_v * d.current, 3)
       }
     });
 

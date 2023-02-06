@@ -20620,9 +20620,9 @@ class App {
       return {
         id: d.id,
         t: this._roundFloat((d.t - this._startTime), 4),
-        current: this._roundFloat(d.current, 2),
-        busVoltage: this._roundFloat(d.bus_v, 2),
-        power: this._roundFloat(d.bus_v * d.current, 2)
+        current: this._roundFloat(d.current, 3),
+        busVoltage: this._roundFloat(d.bus_v, 3),
+        power: this._roundFloat(d.bus_v * d.current, 3)
       }
     });
 
@@ -20766,6 +20766,7 @@ const restartBtn = document.getElementById('restart-btn')
 const resetChartZoomBtn = document.getElementById('reset-zoom')
 const chartCanvasCtx = document.getElementById('chart')
 const exportDataBtn = document.getElementById('export-data-btn')
+const modeSelect = document.getElementById('mode-select');
 
 const app = new App(chartCanvasCtx);
 
@@ -20774,6 +20775,7 @@ stopBtn.addEventListener('click', () => stopMeasurement())
 restartBtn.addEventListener('click', () => restartEmpiotProccess())
 resetChartZoomBtn.addEventListener('click', () => resetChartZoom())
 exportDataBtn.addEventListener('click', () => exportData())
+modeSelect.addEventListener('change', (e) => updateMode(e.target.value))
 
 socket.on('measurementData', (data) => {
   app.updateMeasurementData(data)
@@ -20809,6 +20811,10 @@ function exportData() {
   document.body.appendChild(link);
 
   link.click();
+}
+
+function updateMode(mode) {
+  socket.emit('empiotCommand', mode);
 }
 
 

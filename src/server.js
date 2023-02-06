@@ -54,6 +54,16 @@ io.on('connection', (socket) => {
       stopEmpiotProc();
       await startEmpiotProc(UNIX_SOCKET_PATH);
     }
+
+    if (msg === 'activeMode') {
+      stopEmpiotProc();
+      await startEmpiotProc(UNIX_SOCKET_PATH, 'active');
+    }
+
+    if (msg === 'sleepMode') {
+      stopEmpiotProc();
+      await startEmpiotProc(UNIX_SOCKET_PATH, 'sleep');
+    }
   })
 });
 
