@@ -20631,6 +20631,16 @@ class App {
     this._updateChart(updatedData);
   }
 
+  calculateTotalEnergy() {
+    const total =  this._measurements.reduce((totalEnergy, measurement, i, measurements) => {
+      if (measurement.t === 0) return measurement.power;
+
+      const deltaTime =  measurement.t - measurements[i - 1].t;
+      return totalEnergy + (deltaTime * measurement.power)
+    }, 0)
+    return this._roundFloat(total / 1000.0, 3)
+  }
+
   resetMeasurements() {
     this._measurements = [];
     this._startTime = null;
@@ -20767,6 +20777,7 @@ const resetChartZoomBtn = document.getElementById('reset-zoom')
 const chartCanvasCtx = document.getElementById('chart')
 const exportDataBtn = document.getElementById('export-data-btn')
 const modeSelect = document.getElementById('mode-select');
+const totalEnergy =  document.getElementById('total-energy');
 
 const app = new App(chartCanvasCtx);
 
@@ -20784,10 +20795,12 @@ socket.on('measurementData', (data) => {
 function startMeasurement() {
   app.resetMeasurements();
   socket.emit('empiotCommand', 'start');
+  totalEnergy.innerHTML = '-'
 }
 
 function stopMeasurement() {
   socket.emit('empiotCommand', 'stop');
+  totalEnergy.innerHTML = app.calculateTotalEnergy()
 }
 
 function restartEmpiotProccess() {

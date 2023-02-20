@@ -10,6 +10,7 @@ const resetChartZoomBtn = document.getElementById('reset-zoom')
 const chartCanvasCtx = document.getElementById('chart')
 const exportDataBtn = document.getElementById('export-data-btn')
 const modeSelect = document.getElementById('mode-select');
+const totalEnergy =  document.getElementById('total-energy');
 
 const app = new App(chartCanvasCtx);
 
@@ -27,10 +28,12 @@ socket.on('measurementData', (data) => {
 function startMeasurement() {
   app.resetMeasurements();
   socket.emit('empiotCommand', 'start');
+  totalEnergy.innerHTML = '-'
 }
 
 function stopMeasurement() {
   socket.emit('empiotCommand', 'stop');
+  totalEnergy.innerHTML = app.calculateTotalEnergy()
 }
 
 function restartEmpiotProccess() {

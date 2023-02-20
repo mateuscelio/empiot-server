@@ -31,6 +31,16 @@ export class App {
     this._updateChart(updatedData);
   }
 
+  calculateTotalEnergy() {
+    const total =  this._measurements.reduce((totalEnergy, measurement, i, measurements) => {
+      if (measurement.t === 0) return measurement.power;
+
+      const deltaTime =  measurement.t - measurements[i - 1].t;
+      return totalEnergy + (deltaTime * measurement.power)
+    }, 0)
+    return this._roundFloat(total / 1000.0, 3)
+  }
+
   resetMeasurements() {
     this._measurements = [];
     this._startTime = null;
