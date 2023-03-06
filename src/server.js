@@ -41,7 +41,6 @@ io.use((_socket, next) => {
 
 io.on('connection', (socket) => {
   console.log('WS client connected!');
-  socket.emit('hello', 'world');
 
   socket.on('empiotCommand', async (msg) => {
     if (msg === 'start')
@@ -52,24 +51,24 @@ io.on('connection', (socket) => {
 
     if (msg === 'restartEmpiotProccess') {
       stopEmpiotProc();
-      await startEmpiotProc(UNIX_SOCKET_PATH);
+      await startEmpiotProc(io, UNIX_SOCKET_PATH);
     }
 
     if (msg === 'activeMode') {
       stopEmpiotProc();
-      await startEmpiotProc(UNIX_SOCKET_PATH, 'active');
+      await startEmpiotProc(io, UNIX_SOCKET_PATH, 'active');
     }
 
     if (msg === 'sleepMode') {
       stopEmpiotProc();
-      await startEmpiotProc(UNIX_SOCKET_PATH, 'sleep');
+      await startEmpiotProc(io, UNIX_SOCKET_PATH, 'sleep');
     }
   })
 });
 
 const startServer = async () => {
   await startSocketServer(io, UNIX_SOCKET_PATH)
-  await startEmpiotProc(UNIX_SOCKET_PATH)
+  await startEmpiotProc(io, UNIX_SOCKET_PATH)
   httpServer.listen(3000)
 }
 

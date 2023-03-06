@@ -20638,7 +20638,7 @@ class App {
       const deltaTime =  measurement.t - measurements[i - 1].t;
       return totalEnergy + (deltaTime * measurement.power)
     }, 0)
-    return this._roundFloat(total / 1000.0, 3)
+    return this._roundFloat(total / 1000.0, 4)
   }
 
   resetMeasurements() {
@@ -20792,6 +20792,10 @@ socket.on('measurementData', (data) => {
   app.updateMeasurementData(data)
 })
 
+socket.on('finishedSampling', (_) => {
+  totalEnergy.innerHTML = app.calculateTotalEnergy()
+})
+
 function startMeasurement() {
   app.resetMeasurements();
   socket.emit('empiotCommand', 'start');
@@ -20800,7 +20804,6 @@ function startMeasurement() {
 
 function stopMeasurement() {
   socket.emit('empiotCommand', 'stop');
-  totalEnergy.innerHTML = app.calculateTotalEnergy()
 }
 
 function restartEmpiotProccess() {

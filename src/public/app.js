@@ -38,7 +38,7 @@ export class App {
       const deltaTime =  measurement.t - measurements[i - 1].t;
       return totalEnergy + (deltaTime * measurement.power)
     }, 0)
-    return this._roundFloat(total / 1000.0, 3)
+    return this._roundFloat(total / 1000.0, 4)
   }
 
   resetMeasurements() {

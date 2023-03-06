@@ -25,6 +25,10 @@ socket.on('measurementData', (data) => {
   app.updateMeasurementData(data)
 })
 
+socket.on('finishedSampling', (_) => {
+  totalEnergy.innerHTML = app.calculateTotalEnergy()
+})
+
 function startMeasurement() {
   app.resetMeasurements();
   socket.emit('empiotCommand', 'start');
@@ -33,7 +37,6 @@ function startMeasurement() {
 
 function stopMeasurement() {
   socket.emit('empiotCommand', 'stop');
-  totalEnergy.innerHTML = app.calculateTotalEnergy()
 }
 
 function restartEmpiotProccess() {
