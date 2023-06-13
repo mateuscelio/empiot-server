@@ -13,12 +13,23 @@
     <div>
       <button type="button" id="start-btn">Start Measurement</button>
       <button type="button" id="stop-btn">Stop Measurement</button>
-      <button type="button" id="restart-btn">Restart Empiot Proccess</button>
-      <button type="button" id="export-data-btn">Export Data</button>
-      <select id="mode-select">
-        <option value="activeMode">Active(Shunt resistor 0.1Ohm)</option>
-        <option value="sleepMode">Sleep(Shunt resistor 10Ohm)</option>
+      <button type="button" id="restart-btn">Restart Empiot Process</button>
+      <select id="shunt-select">
+        <option value="0.1">Active(Shunt resistor 0.1Ohm)</option>
+        <option value="10">Sleep(Shunt resistor 10Ohm)</option>
+        <option value="100">Sleep(Shunt resistor 100Ohm)</option>
       </select>
+      <select id="adc-select">
+        <option value="adc9b">9 bits</option>
+        <option value="adc12b">12 bits</option>
+      </select>
+      <select id="buffer-select">
+        <option value="500">500 samples</option>
+        <option value="1000">1000 samples</option>
+        <option value="2000">2000 samples</option>
+        <option value="4000">4000 samples</option>
+      </select>
+      <button type="button" id="export-data-btn">Export Data</button>
       <div>Total energy: <i id="total-energy">0</i> J</div>
     </div>
     <div>

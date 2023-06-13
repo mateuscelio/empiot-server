@@ -9,11 +9,10 @@ const EMPIOT_BIN = path.join(__dirname, '/../../empiot/dist/empiot');
 let empiotProc = null;
 const udpSocket = dgram.createSocket('udp4');
 
-exports.startEmpiotProc = (wsServer, unixSocketPath, mode = 'active') => {
+exports.startEmpiotProc = (wsServer, config) => {
+  const { unixSocketPath, shuntResistor, bufferSize, adcMode } = config
   if (!empiotProc) {
-    const shuntResistor = mode === 'active' ? '0.1' : '10';
-
-    empiotProc = spawn(EMPIOT_BIN, [shuntResistor, '-s', unixSocketPath, '-g']);
+    empiotProc = spawn(EMPIOT_BIN, [shuntResistor, '-s', unixSocketPath, adcMode, bufferSize, '-g']);
 
     empiotProc.on('exit', function (code, signal) {
       console.log('Empiot process exited with ' +

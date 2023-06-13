@@ -6,6 +6,12 @@ const fs = require('fs/promises');
 const path = require('path');
 
 const UNIX_SOCKET_PATH = '/tmp/sock-test'
+let empiotConfig = {
+  unixSocketPath: UNIX_SOCKET_PATH,
+  shuntResistor: '0.1',
+  bufferSize: '1000',
+  adcMode: 'adc12b'
+}
 
 const httpServer = createServer(async (req, res) => {
   switch (req.url) {
@@ -49,26 +55,22 @@ io.on('connection', (socket) => {
     if (msg === 'stop')
       return stopMeasurement();
 
-    if (msg === 'restartEmpiotProccess') {
+    if (msg === 'restartEmpiotProcess') {
       stopEmpiotProc();
-      await startEmpiotProc(io, UNIX_SOCKET_PATH);
+      await startEmpiotProc(io, empiotConfig);
     }
+  });
 
-    if (msg === 'activeMode') {
-      stopEmpiotProc();
-      await startEmpiotProc(io, UNIX_SOCKET_PATH, 'active');
-    }
-
-    if (msg === 'sleepMode') {
-      stopEmpiotProc();
-      await startEmpiotProc(io, UNIX_SOCKET_PATH, 'sleep');
-    }
-  })
+  socket.on('updateConfig', async (config) => {
+    empiotConfig = { ...empiotConfig, ...config }
+    stopEmpiotProc();
+    await startEmpiotProc(io, empiotConfig);
+  });
 });
 
 const startServer = async () => {
   await startSocketServer(io, UNIX_SOCKET_PATH)
-  await startEmpiotProc(io, UNIX_SOCKET_PATH)
+  await startEmpiotProc(io, empiotConfig)
   httpServer.listen(3000)
 }
 

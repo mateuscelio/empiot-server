@@ -2,6 +2,11 @@ import io from 'socket.io-client';
 import { App } from './app';
 
 const socket = io();
+let empiotConfig = {
+  shuntResistor: '0.1',
+  bufferSize: '500',
+  adcMoe: 'adc9b'
+}
 
 const startBtn = document.getElementById('start-btn')
 const stopBtn = document.getElementById('stop-btn')
@@ -9,17 +14,21 @@ const restartBtn = document.getElementById('restart-btn')
 const resetChartZoomBtn = document.getElementById('reset-zoom')
 const chartCanvasCtx = document.getElementById('chart')
 const exportDataBtn = document.getElementById('export-data-btn')
-const modeSelect = document.getElementById('mode-select');
-const totalEnergy =  document.getElementById('total-energy');
+const shuntSelect = document.getElementById('shunt-select');
+const adcSelect = document.getElementById('adc-select');
+const bufferSelect = document.getElementById('buffer-select');
+const totalEnergy = document.getElementById('total-energy');
 
 const app = new App(chartCanvasCtx);
 
 startBtn.addEventListener('click', () => startMeasurement())
 stopBtn.addEventListener('click', () => stopMeasurement())
-restartBtn.addEventListener('click', () => restartEmpiotProccess())
+restartBtn.addEventListener('click', () => restartEmpiotProcess())
+shuntSelect.addEventListener('change', (e) => updateEmpiotConfig({ shuntResistor: e.target.value }))
+adcSelect.addEventListener('change', (e) => updateEmpiotConfig({ adcMode: e.target.value }))
+bufferSelect.addEventListener('change', (e) => updateEmpiotConfig({ bufferSize: e.target.value }))
 resetChartZoomBtn.addEventListener('click', () => resetChartZoom())
 exportDataBtn.addEventListener('click', () => exportData())
-modeSelect.addEventListener('change', (e) => updateMode(e.target.value))
 
 socket.on('measurementData', (data) => {
   app.updateMeasurementData(data)
@@ -39,8 +48,13 @@ function stopMeasurement() {
   socket.emit('empiotCommand', 'stop');
 }
 
-function restartEmpiotProccess() {
-  socket.emit('empiotCommand', 'restartEmpiotProccess')
+function restartEmpiotProcess() {
+  socket.emit('empiotCommand', 'restartEmpiotProcess')
+}
+
+function updateEmpiotConfig(updatedValues) {
+  empiotConfig = { ...empiotConfig, ...updatedValues }
+  socket.emit('updateConfig', empiotConfig)
 }
 
 function resetChartZoom() {
@@ -50,8 +64,8 @@ function resetChartZoom() {
 function exportData() {
   const fileName = prompt('Name of measurements export file') || 'measurements'
 
-  let csvContent = "data:text/csv;charset=utf-8,id;t;current;busVoltage;power\n"
-    + app.getMeasurements().map(e => Object.values(e).join(";")).join("\n");
+  let csvContent = "data:text/csv;charset=utf-8,id,t,current,busVoltage,power\n"
+    + app.getMeasurements().map(e => Object.values(e).join(",")).join("\n");
   let encodedUri = encodeURI(csvContent)
 
   var link = document.createElement("a");
@@ -61,8 +75,3 @@ function exportData() {
 
   link.click();
 }
-
-function updateMode(mode) {
-  socket.emit('empiotCommand', mode);
-}
-
